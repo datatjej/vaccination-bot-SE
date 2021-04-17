@@ -88,8 +88,9 @@ api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 try:
     api.verify_credentials()
-    print("Authentication OK")
-except:
     print("Error during authentication")
+    
+except:
+    print("Authentication OK")
 
 api.update_status(tweet_string)
