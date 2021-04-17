@@ -6,27 +6,6 @@ import pandas as pd
 import configargparse as cap
 from bs4 import BeautifulSoup
 
-argparser = cap.ArgParser(default_config_files=['keys.yml'])
-argparser.add('-c', is_config_file=True, help='config file path')
-argparser.add('--api', env_var='BOT_API')
-argparser.add('--api-secret', env_var='BOT_API_SECRET')
-argparser.add('--access', env_var='BOT_ACCESS')
-argparser.add('--access-secret', env_var='BOT_ACCESS_SECRET')
-
-args = argparser.parse_args()
-
-# Authenticate to Twitter
-auth = tweepy.OAuthHandler(args.api, args.api_secret)
-auth.set_access_token(args.access, args.access_secret)
-
-api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
-
-try:
-    api.verify_credentials()
-    print("Authentication OK")
-except:
-    print("Error during authentication")
-
 # Site URL
 url="https://www.folkhalsomyndigheten.se/smittskydd-beredskap/utbrott/aktuella-utbrott/covid-19/statistik-och-analyser/statistik-over-registrerade-vaccinationer-covid-19/"
 
@@ -91,5 +70,24 @@ first_bar = "[" + '█' * int(percentage_first_dose/3) + "." * int((100-percenta
 second_bar = "[" + '█' * int(percentage_second_dose/3) + "." * int((100-percentage_second_dose)/3) + "] " + str(percentage_second_dose) + " %"
 
 tweet_string = "Första dosen:" + "\n" + first_bar + "\n\n" + "Andra dosen:" + "\n" + second_bar
+
+argparser.add('--api', env_var='BOT_API')
+argparser.add('--api-secret', env_var='BOT_API_SECRET')
+argparser.add('--access', env_var='BOT_ACCESS')
+argparser.add('--access-secret', env_var='BOT_ACCESS_SECRET')
+
+args = argparser.parse_args()
+
+# Authenticate to Twitter
+auth = tweepy.OAuthHandler(args.api, args.api_secret)
+auth.set_access_token(args.access, args.access_secret)
+
+api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+try:
+    api.verify_credentials()
+    print("Authentication OK")
+except:
+    print("Error during authentication")
 
 api.update_status(tweet_string)
