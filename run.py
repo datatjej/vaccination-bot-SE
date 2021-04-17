@@ -34,7 +34,7 @@ url="https://www.folkhalsomyndigheten.se/smittskydd-beredskap/utbrott/aktuella-u
 html_content = requests.get(url).text
 
 # Parse HTML code for the entire site
-soup = BeautifulSoup(html_content, "lxml")
+soup = BeautifulSoup(html_content, "html5lib")
 #print(soup.prettify()) # print the parsed data of html
 
 # Get the right table by sorting on caption
@@ -81,7 +81,7 @@ for row_num in range(len(body_rows)): # A row at a time
 # We can now use the data on all_rowsa and headings to make a table
 # all_rows becomes our data and headings the column names
 df = pd.DataFrame(data=all_rows,columns=headings)
-print(df.head)
+print(df)
 
 #adult_population = 8189892 # SCB's adult population figure from 31-12-2020
 
