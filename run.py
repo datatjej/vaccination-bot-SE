@@ -71,6 +71,8 @@ second_bar = "[" + '█' * int(percentage_second_dose/3) + "." * int((100-percen
 
 tweet_string = "Första dosen:" + "\n" + first_bar + "\n\n" + "Andra dosen:" + "\n" + second_bar
 
+argparser = cap.ArgParser(default_config_files=['keys.yml'])
+argparser.add('-c', is_config_file=True, help='config file path')
 argparser.add('--api', env_var='BOT_API')
 argparser.add('--api-secret', env_var='BOT_API_SECRET')
 argparser.add('--access', env_var='BOT_ACCESS')
