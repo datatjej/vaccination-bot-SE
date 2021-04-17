@@ -2,7 +2,7 @@ name: Tweet latest vaccination statistics for Sweden
  
 on:
   schedule:
-    - cron:  '40 20 * * *'  # UTC time
+    - cron:  '30 12 * * 2-5'  # Run every Tuesday-Friday at 12:30 UTC time (14:30 Swedish time)
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
