@@ -1,8 +1,32 @@
 # Import necessary packages
-from bs4 import BeautifulSoup
+import re
+import tweepy
 import requests
 import pandas as pd
-import re
+import configargparse as cap
+from bs4 import BeautifulSoup
+
+argparser = cap.ArgParser(default_config_files=['keys.yml'])
+argparser.add('-c', is_config_file=True, help='config file path')
+argparser.add('--api', env_var='BOT_API')
+argparser.add('--api-secret', env_var='BOT_API_SECRET')
+argparser.add('--access', env_var='BOT_ACCESS')
+argparser.add('--access-secret', env_var='BOT_ACCESS_SECRET')
+
+args = argparser.parse_args()
+
+# Authenticate to Twitter
+auth = tweepy.OAuthHandler(args.api, args.api_secret)
+auth.set_access_token(args.access, args.access_secret)
+
+api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+try:
+    api.verify_credentials()
+    print("Authentication OK")
+except:
+    print("Error during authentication")
+
 # Site URL
 url="https://www.folkhalsomyndigheten.se/smittskydd-beredskap/utbrott/aktuella-utbrott/covid-19/statistik-och-analyser/statistik-over-registrerade-vaccinationer-covid-19/"
 
@@ -30,14 +54,13 @@ body_rows = body[1:] # All other items becomes the rest of the rows
 headings = []
 for item in head.find_all("th"): # loop through all th elements
     # convert the th elements to text and strip "\n"
-    item = (item.text).rstrip("\n")
+    item = (item.text) #.rstrip("\n")
     # append the clean column name to headings
     headings.append(item)
-print(headings)
+#print(headings)
 
 # Next is now to loop though the rest of the rows
 
-#print(body_rows[0])
 all_rows = [] # will be a list for list for all rows
 for row_num in range(len(body_rows)): # A row at a time
     row = [] # this will old entries for one row
@@ -58,4 +81,15 @@ for row_num in range(len(body_rows)): # A row at a time
 # We can now use the data on all_rowsa and headings to make a table
 # all_rows becomes our data and headings the column names
 df = pd.DataFrame(data=all_rows,columns=headings)
-print(df)
+print(df.head)
+
+#adult_population = 8189892 # SCB's adult population figure from 31-12-2020
+
+percentage_first_dose = df['Andel (%) vaccinerademed minst 1 dos'].values[0]
+percentage_second_dose = df['Andel (%) vaccinerademed 2 doser'].values[0]
+first_bar = "[" + '█' * int(percentage_first_dose/3) + "." * int((100-percentage_first_dose)/3) + "] " + str(percentage_first_dose) + " %"
+second_bar = "[" + '█' * int(percentage_second_dose/3) + "." * int((100-percentage_second_dose)/3) + "] " + str(percentage_second_dose) + " %"
+
+tweet_string = "Första dosen:" + "\n" + first_bar + "\n\n" + "Andra dosen:" + "\n" + second_bar
+
+api.update_status(tweet_string)
