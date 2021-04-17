@@ -60,7 +60,7 @@ for row_num in range(len(body_rows)): # A row at a time
 # We can now use the data on all_rowsa and headings to make a table
 # all_rows becomes our data and headings the column names
 df = pd.DataFrame(data=all_rows,columns=headings)
-print(df)
+#print(df)
 
 #adult_population = 8189892 # SCB's adult population figure from 31-12-2020
 
@@ -88,9 +88,7 @@ api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 try:
     api.verify_credentials()
-    print("Error during authentication")
-    
-except:
     print("Authentication OK")
-
-api.update_status(tweet_string)
+    api.update_status(tweet_string)
+except:
+    print("Error during authentication")
