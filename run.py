@@ -83,8 +83,8 @@ df = pd.DataFrame(data=all_rows,columns=headings)
 percentage_first_dose = df['Andel (%) vaccinerademed minst 1 dos'].values[0]
 percentage_second_dose = df['Andel (%) vaccinerademed 2 doser'].values[0]
 
-first_bar = "[" + '█' * int(percentage_first_dose/3) + "." * int((100-percentage_first_dose)/3) + "] " + str(percentage_first_dose) + " %"
-second_bar = "[" + '█' * int(percentage_second_dose/3) + "." * int((100-percentage_second_dose)/3) + "] " + str(percentage_second_dose) + " %"
+first_bar = "[" + '▓' * int(percentage_first_dose/5) + "░" * int((100-percentage_first_dose)/5) + "] " + str(percentage_first_dose) + " %"
+second_bar = "[" + '▓' * int(percentage_second_dose/5) + "░" * int((100-percentage_second_dose)/5) + "] " + str(percentage_second_dose) + " %"
 
 tweet_string = "Första dosen:" + "\n" + first_bar + "\n\n" + "Andra dosen:" + "\n" + second_bar
 print(tweet_string)
