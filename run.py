@@ -38,7 +38,7 @@ soup = BeautifulSoup(html_content, "html5lib")
 #print(soup.prettify()) # print the parsed data of html
 
 # Get the right table by sorting on caption
-table2 = soup.find("caption", text="Tabell 2. Antal och andel vaccinerade med minst 1 dos respektive 2 doser").find_parent("table")
+table2 = soup.find("caption", text="Tabell 2. Antal och andel vaccinerade med minst 1 dos respektive 2 doser.").find_parent("table")
 
 # the head will form our column names
 body = table2.find_all("tr")
