@@ -53,32 +53,33 @@ headings = []
 for item in head.find_all("th"): # loop through all th elements
     # convert the th elements to text and strip "\n"
     item = (item.text) #.rstrip("\n")
+    #rint(item)
     # append the clean column name to headings
     headings.append(item)
 
 # Next is now to loop though the rest of the rows
 
 all_rows = [] # will be a list for list for all rows
+#print("body rows: ", body_rows)
 for row_num in range(len(body_rows)): # A row at a time
     row = [] # this will old entries for one row
-    for index, row_item in enumerate(body_rows[row_num].find_all("td")): #loop through all row entries
-        # row_item.text removes the tags from the entries
-        if index == 0:
-            date = row_item.text
-            row.append(date)
-        elif index == 1 or index == 3:
-            number = int(re.sub("(\s)","",row_item.text))
+    date = body_rows[row_num].find('th') # extract the date from the header cell in each row
+    row.append(date.get_text())
+    for index, row_item in enumerate(body_rows[row_num].find_all("td")): # loop through all remaining row cells on each line
+        if index == 0 or index == 2:
+            number = int(re.sub("(\s)","",row_item.text)) # get the de facto number of people vaccinated (not currently used for the tweet)   
             row.append(number)
-        elif index == 2 or index == 4:
-            percentage = float(re.sub(",",".",row_item.text))
-            row.append(percentage)
+        elif index == 1 or index == 3:
+            percentage_without_sign = re.sub("%","",row_item.text) # get the percentage without % sign
+            percentage_without_comma = float(re.sub(",",".",percentage_without_sign)) # ...and replace comma with point notation
+            row.append(percentage_without_comma)
     # append one row to all_rows
     all_rows.append(row)
 
 # We can now use the data on all_rowsa and headings to make a table
 # all_rows becomes our data and headings the column names
 df = pd.DataFrame(data=all_rows,columns=headings)
-#print(df)
+print(df)
 
 percentage_first_dose = df['Andel (%) vaccinerademed minst 1 dos'].values[0]
 percentage_second_dose = df['Andel (%) vaccinerademed 2 doser'].values[0]
