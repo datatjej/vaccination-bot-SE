@@ -19,7 +19,7 @@ args = argparser.parse_args()
 auth = tweepy.OAuthHandler(args.api, args.api_secret)
 auth.set_access_token(args.access, args.access_secret)
 
-api = tweepy.API(auth, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+api = tweepy.API(auth, wait_on_rate_limit=True) # wait_on_rate_limit_notify is removed from Tweepy 4.0.0 
 
 try:
     api.verify_credentials()
